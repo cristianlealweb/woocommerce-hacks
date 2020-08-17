@@ -92,3 +92,43 @@ function wc_add_custom_states_to_country( $states ) {
 
 add_filter('woocommerce_states', 'wc_add_custom_states_to_country');
 add_filter('woocommerce_countries_allowed_country_states', 'wc_add_custom_states_to_country');
+
+
+
+// Actualiza automáticamente el estado de los pedidos a COMPLETADO
+
+function wc_actualiza_estado_pedidos_a_completado( $order_id ) {
+    global $woocommerce;
+    
+    //ID's de las pasarelas de pago a las que afecta
+    $paymentMethods = array( 'woo-mercado-pago-basic', 'paypal' );
+    
+    if ( !$order_id ) return;
+    $order = new WC_Order( $order_id );
+
+    if ( !in_array( $order->payment_method, $paymentMethods ) ) return;
+    $order->update_status( 'completed' );
+}
+add_action( 'woocommerce_order_status_processing', 'wc_actualiza_estado_pedidos_a_completado' );
+add_action( 'woocommerce_order_status_on-hold', 'wc_actualiza_estado_pedidos_a_completado' );
+
+
+
+
+// Ocultar tipo de pagos por moneda
+// Para usar con Plugin https://es.wordpress.org/plugins/woocommerce-currency-switcher/
+
+function wc_filter_gateways($gateway_list){
+    global $WOOCS;
+    $exclude = array(
+        'paypal' => array('ARS'), //No mostrar PayPal en Pesos Argentinos
+        'woo-mercado-pago-basic' => array('USD')//No mostrar Mercado Pago en Dólares
+    );
+    foreach ($exclude as $gateway_key => $currencies){
+        if (isset($gateway_list[$gateway_key]) AND in_array($WOOCS->current_currency, $currencies)){
+            unset($gateway_list[$gateway_key]);
+        }
+    }
+    return $gateway_list;
+}
+add_filter('woocommerce_available_payment_gateways', 'wc_filter_gateways', 1);
