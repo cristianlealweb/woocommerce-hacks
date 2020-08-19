@@ -115,7 +115,7 @@ add_action( 'woocommerce_order_status_on-hold', 'wc_actualiza_estado_pedidos_a_c
 
 // Establecer un importe minimo en la compra
 function wc_importe_minimo() {
-  $minimum = 500;  // Debes cambiar el 20 por el importe mínimo que quieras establecer en tu pedido
+  $minimum = 500;
   if ( WC()->cart->total < $minimum ) {
     if( is_cart() ) {
       wc_print_notice(
