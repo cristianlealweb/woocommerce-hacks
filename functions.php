@@ -113,7 +113,29 @@ add_action( 'woocommerce_order_status_processing', 'wc_actualiza_estado_pedidos_
 add_action( 'woocommerce_order_status_on-hold', 'wc_actualiza_estado_pedidos_a_completado' );
 
 
-
+// Establecer un importe minimo en la compra
+function wc_importe_minimo() {
+  $minimum = 500;  // Debes cambiar el 20 por el importe mínimo que quieras establecer en tu pedido
+  if ( WC()->cart->total < $minimum ) {
+    if( is_cart() ) {
+      wc_print_notice(
+      sprintf( 'Debes realizar un pedido mínimo de %s para finalizar su compra.' ,
+        wc_price( $minimum ),
+        wc_price( WC()->cart->total )
+      ), 'error'
+      );
+    } else {
+      wc_add_notice(
+      sprintf( 'No puedes finalizar tu compra. Debes realizar un pedido mínimo de %s para finalizar su compra.' , 
+        wc_price( $minimum ), 
+        wc_price( WC()->cart->total )
+      ), 'error'
+      );
+    }
+  }
+}
+add_action( 'woocommerce_checkout_process', 'wc_importe_minimo' );
+add_action( 'woocommerce_before_cart' , 'wc_importe_minimo' );
 
 // Ocultar tipo de pagos por moneda
 // Para usar con Plugin https://es.wordpress.org/plugins/woocommerce-currency-switcher/
