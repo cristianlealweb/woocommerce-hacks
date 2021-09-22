@@ -16,29 +16,33 @@ add_filter( 'woocommerce_continue_shopping_redirect', 'wc_continue_shopping_redi
 
 // Cambiar texto añadir a carrito
 
-function wc_custom_product_add_to_cart_tex() {
- global $product;
- 
- $product_type = $product->product_type;
- 
- switch ( $product_type ) {
- case 'external':
- return __( 'QUIERO!', 'woocommerce' );
- break;
- case 'grouped':
- return __( 'Ver productos', 'woocommerce' );
- break;
- case 'simple':
- return __( 'QUIERO!', 'woocommerce' );
- break;
- case 'variable':
- return __( 'QUIERO!', 'woocommerce' );
- break;
- default:
- return __( 'Leer más', 'woocommerce' );
- }
+add_filter( 'woocommerce_product_add_to_cart_text' , 'custom_woocommerce_product_add_to_cart_text' );
+/**
+ * custom_woocommerce_template_loop_add_to_cart
+*/
+function custom_woocommerce_product_add_to_cart_text() {
+	global $product;
+	
+	$product_type = $product->product_type;
+	
+	switch ( $product_type ) {
+		case 'external':
+			return __( 'Comprar productos', 'woocommerce' );
+		break;
+		case 'grouped':
+			return __( 'Ver productos', 'woocommerce' );
+		break;
+		case 'simple':
+			return __( 'Añadir al carrito', 'woocommerce' );
+		break;
+		case 'variable':
+			return __( 'Selección de opciones', 'woocommerce' );
+		break;
+		default:
+			return __( 'Leer más', 'woocommerce' );
+	}
+	
 }
-add_filter( 'woocommerce_product_add_to_cart_text' , 'wc_custom_product_add_to_cart_text' );
 
 
 
