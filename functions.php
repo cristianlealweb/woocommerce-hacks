@@ -6,6 +6,23 @@ add_filter( 'woocommerce_return_to_shop_redirect', 'wc_empty_cart_redirect_url' 
 
 
 
+// Snippet para cambiar la imagen por defecto en WooCommerce
+add_action( 'init', 'custom_placeholder_image' );
+ 
+function custom_placeholder_image() {
+  add_filter('woocommerce_placeholder_img_src', 'custom_woocommerce_placeholder_img_src');
+   
+	function custom_woocommerce_placeholder_img_src( $src ) {
+	$upload_dir = wp_upload_dir();
+	$uploads = untrailingslashit( $upload_dir['baseurl'] );
+	$src = $uploads . '/2021/09/icon-192.png';
+	 
+	return $src;
+	}
+}
+
+
+
 // Cambiar dirección boton Seguir comprando
 function wc_continue_shopping_redirect( $return_to ) {
     return 'https://cristianleal.com.ar/';
